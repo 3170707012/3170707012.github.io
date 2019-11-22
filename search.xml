@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>设计实现SqlHelper</title>
+      <link href="/2019/11/22/%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0SqlHelper/"/>
+      <url>/2019/11/22/%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0SqlHelper/</url>
+      
+        <content type="html"><![CDATA[<p>一、思维导图</p><p> <img src="https://img-blog.csdnimg.cn/20190323210511849.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01vbkdvMTc=,size_16,color_FFFFFF,t_70" alt="img"> </p><p>二、知识点<br>sqlhelper是一个类，在这个类当中可以声明定义许多方法，如获取SQL命名、查询标量、写入操作等，sqlhelper可以用于简化重复的去写那些数据库连接（DbConnection）,DbCommand,DbDataReader等等。SqlHelper 封装过后通常是只需要给方法传入一些参数如数据库连接字符串，SQL参数等，就可以访问数据库了，很方便。数据访问层可以通过调用SqlHelper当中的方法来实现一系列操作</p><p>总的来说SQLHelper类的作用就是代替每一个功能中连接数据库的过程的代码的，把那些代码给抽象出来封装，然后给其他的功能复用，达到代码简化的目的，但连接数据库的字符串也不是直接就写在了类里面，而是通过配置文件，把链接字符串在配置文件里写了。</p><p>三、示例<br> public class SqlHelper</p><p>{</p><pre><code> private static SqlCommand GetCommand(string commandText, bool isStoredProcedure, SqlParameter[] sqlParameters)</code></pre><p>{</p><p>   SqlConnection sqlConnection = new SqlConnection();</p><p>   sqlConnection.ConnectionString = ConfigurationManager.ConnectionStrings[“Sql”].ToString();</p><p>   SqlCommand sqlCommand = sqlConnection.CreateCommand(); </p><p>   sqlCommand.CommandText = commandText;</p><p>   if (isStoredProcedure)</p><p>   {</p><pre><code> sqlCommand.CommandType = CommandType.StoredProcedure; </code></pre><p>   }</p><p>  if (sqlParameters != null)  </p><p>{</p><p>   sqlCommand.Parameters.AddRange(sqlParameters);  </p><p>}</p><p>  return sqlCommand;     </p><p>}</p><p>public static int ExcuteNonQuery(string commandText, bool isStoredProcedure, SqlParameter[] sqlParameters)</p><p>{</p><p>   int k=0;</p><p>  using (SqlCommand sqlCommand = GetCommand(commandText, isStoredProcedure, sqlParameters))//调用GetCommand方法，避免了重复地敲响连接和命令的代码，使程序变得更简洁</p><p> {</p><p>   sqlCommand.Connection.Open(); </p><p>  rowAffected = sqlCommand.ExecuteNonQuery();//执行命令</p><p>   sqlCommand.Connection.Close();</p><p>}</p><p> return k; </p><p>}</p><p>}</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>myFirstBlog</title>
       <link href="/2019/11/22/myFirstBlog/"/>
       <url>/2019/11/22/myFirstBlog/</url>
